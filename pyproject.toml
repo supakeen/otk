@@ -9,6 +9,7 @@ dependencies = [
 
 [project.scripts]
 otk = "otk.command:root"
+osbuild_noop = "otk_osbuild.command:noop"
 osbuild_depsolve_dnf4 = "otk_osbuild.command:depsolve_dnf4"
 
 [project.optional-dependencies]
