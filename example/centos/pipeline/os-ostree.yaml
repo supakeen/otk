@@ -15,7 +15,7 @@ stages:
 
   # Disk bits
   - otk.external.osbuild.partition_table.gen_fstab_stage:
-    source: ${filesystem}
+      source: ${filesystem}
 
   # Boot bits
   - otk.include: fragment/kernel-cmdline.yaml
@@ -37,7 +37,7 @@ stages:
   - otk.include: fragment/systemd-unit.yaml
   - otk.include: fragment/systemd.yaml
 
-  - otk.include: fragment/users.yaml
+  - otk.include: fragment/user.yaml
   - otk.include: fragment/oscap.yaml
 
   # Always

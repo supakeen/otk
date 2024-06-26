@@ -13,13 +13,16 @@ import subprocess
 
 def source_add(kind, data):
     """Add an osbuild source to the tree."""
+    return
 
     # Initialize empty sources
-    if data["context"]["sources"].get(kind) is None:
-        data["context"]["sources"][kind] = {"items": {}}
+    # if data["context"]["sources"].get(kind) is None:
+    #    data["context"]["sources"][kind] = {"items": {}}
 
 
 def source_add_inline(data, text):
+    return
+
     source_add("org.osbuild.inline", data)
 
     text = text.encode("utf8")
@@ -36,6 +39,8 @@ def source_add_inline(data, text):
 
 
 def source_add_curl(data, checksum, url):
+    return
+
     source_add("org.osbuild.curl", data)
 
     if checksum not in data["context"]["sources"]["org.osbuild.curl"]["items"]:
@@ -86,7 +91,7 @@ def depsolve_dnf4():
     sys.stdout.write(
         json.dumps(
             {
-                "context": data["context"],
+                # "context": data["context"],
                 "tree": {
                     "type": "org.osbuild.rpm",
                     "inputs": {
@@ -182,3 +187,7 @@ def file_from_path():
             }
         )
     )
+
+
+def noop():
+    sys.stdout.write('{"tree": {}}')

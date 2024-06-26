@@ -1,5 +1,6 @@
-otk.op.if-set:
-  what: modfication.chrony
-  then:
-    - type: org.osbuild.chrony
-      options: ${modfication.chrony}
+- foo: "bar"
+#otk.op.if-set:
+#  what: modfication.chrony
+#  then:
+#    - type: org.osbuild.chrony
+#      options: ${modfication.chrony}
