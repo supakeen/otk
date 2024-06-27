@@ -13,11 +13,10 @@ import subprocess
 
 def source_add(kind, data):
     """Add an osbuild source to the tree."""
-    return
 
     # Initialize empty sources
-    # if data["context"]["sources"].get(kind) is None:
-    #    data["context"]["sources"][kind] = {"items": {}}
+    if data.get(kind) is None:
+        data[kind] = {"items": {}}
 
 
 def source_add_inline(data, text):
@@ -30,7 +29,7 @@ def source_add_inline(data, text):
     addr = f"sha256:{hashsum}"
 
     if addr not in data["context"]["sources"]["org.osbuild.inline"]["items"]:
-        data["context"]["sources"]["org.osbuild.inline"]["items"][addr] = {
+        data["org.osbuild.inline"]["items"][addr] = {
             "encoding": "base64",
             "data": base64.b64encode(text).decode("utf8"),
         }
@@ -39,20 +38,18 @@ def source_add_inline(data, text):
 
 
 def source_add_curl(data, checksum, url):
-    return
-
     source_add("org.osbuild.curl", data)
 
-    if checksum not in data["context"]["sources"]["org.osbuild.curl"]["items"]:
-        data["context"]["sources"]["org.osbuild.curl"]["items"][checksum] = {"url": url}
+    if checksum not in data["org.osbuild.curl"]["items"]:
+        data["org.osbuild.curl"]["items"][checksum] = {"url": url}
 
 
 def depsolve_dnf4_defines():
     data = json.loads(sys.stdin.read())
-    args = data["tree"]["otk.external.osbuild_depsolve_dnf4"]
+    args = data["tree"]["otk.external.osbuild_depsolve_dnf4_defines"]
     srcs = {}
 
-    # source_add_curl("org.osbuild.rpm", data)
+    source_add("org.osbuild.rpm", srcs)
 
     request = {
         "command": "depsolve",
@@ -88,8 +85,17 @@ def depsolve_dnf4_defines():
     results = json.loads(process.stdout)
 
     for package in results.get("packages", []):
-        source_add_curl(data, package["checksum"], package["remote_location"])
+        source_add_curl(srcs, package["checksum"], package["remote_location"])
 
+    sys.stdout.write(
+        json.dumps({
+            "tree": {
+                "sources": srcs,
+            },
+        })
+    )
+
+    """
     sys.stdout.write(
         json.dumps(
             {
@@ -116,6 +122,7 @@ def depsolve_dnf4_defines():
             }
         )
     )
+    """
 
 
 def noop():

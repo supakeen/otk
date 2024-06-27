@@ -6,15 +6,6 @@ runner: "org.osbuild.centos9"
 stages:
   - otk.op.join:
       values:
-        - - otk.external.osbuild_depsolve_dnf4:
-              architecture: ${architecture}
-              releasever: ${version}
-              module_platform_id: platform:el${version}
-              docs: ${packages.build.docs}
-              weak: ${packages.build.weak}
-              repositories: ${packages.build.repositories}
-              gpgkeys: ${packages.build.keys}
-              packages: ${packages.build.packages}
         - type: org.osbuild.selinux
           options:
             file_contexts: etc/selinux/targeted/contexts/files/file_contexts
