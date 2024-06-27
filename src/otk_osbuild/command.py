@@ -47,25 +47,26 @@ def source_add_curl(data, checksum, url):
         data["context"]["sources"]["org.osbuild.curl"]["items"][checksum] = {"url": url}
 
 
-def depsolve_dnf4():
+def depsolve_dnf4_defines():
     data = json.loads(sys.stdin.read())
-    tree = data["tree"]["otk.external.osbuild_depsolve_dnf4"]
+    args = data["tree"]["otk.external.osbuild_depsolve_dnf4"]
+    srcs = {}
 
     # source_add_curl("org.osbuild.rpm", data)
 
     request = {
         "command": "depsolve",
-        "arch": tree["architecture"],
-        "module_platform_id": "platform:" + tree["module_platform_id"],
-        "releasever": tree["releasever"],
+        "arch": args["architecture"],
+        "module_platform_id": "platform:" + args["module_platform_id"],
+        "releasever": args["releasever"],
         "cachedir": "/tmp",
         "arguments": {
             "root_dir": "/tmp",
-            "repos": tree["repositories"],
+            "repos": args["repositories"],
             "transactions": [
                 {
-                    "package-specs": tree["packages"]["include"],
-                    "exclude-specs": tree["packages"].get("exclude", []),
+                    "package-specs": args["packages"]["include"],
+                    "exclude-specs": args["packages"].get("exclude", []),
                 },
             ],
         },
@@ -79,6 +80,7 @@ def depsolve_dnf4():
         encoding="utf8",
         check=False,
     )
+
     if process.returncode != 0:
         # TODO: fix this
         raise Exception(process.stderr)  # pylint: disable=broad-exception-raised
@@ -108,80 +110,7 @@ def depsolve_dnf4():
                         }
                     },
                     "options": {
-                        "gpgkeys": tree["gpgkeys"],
-                    },
-                },
-            }
-        )
-    )
-
-
-def file_from_text():
-    data = json.loads(sys.stdin.read())
-
-    dest = data["tree"]["destination"]
-    hashsum, addr = source_add_inline(data, data["tree"]["text"])
-
-    sys.stdout.write(
-        json.dumps(
-            {
-                "context": data["context"],
-                "tree": {
-                    "type": "org.osbuild.copy",
-                    "inputs": {
-                        f"file-{hashsum}": {
-                            "type": "org.osbuild.files",
-                            "origin": "org.osbuild.source",
-                            "references": [
-                                {"id": addr},
-                            ],
-                        }
-                    },
-                    "options": {
-                        "paths": [
-                            {
-                                "from": f"input://file-{hashsum}/{addr}",
-                                "to": f"tree://{dest}",
-                                "remove_destination": True,
-                            }
-                        ]
-                    },
-                },
-            }
-        )
-    )
-
-
-def file_from_path():
-    data = json.loads(sys.stdin.read())
-
-    dest = data["tree"]["destination"]
-    text = (pathlib.Path(data["context"]["path"]) / data["tree"]["source"]).read_text()
-    hashsum, addr = source_add_inline(data, text)
-
-    sys.stdout.write(
-        json.dumps(
-            {
-                "context": data["context"],
-                "tree": {
-                    "type": "org.osbuild.copy",
-                    "inputs": {
-                        f"file-{hashsum}": {
-                            "type": "org.osbuild.files",
-                            "origin": "org.osbuild.source",
-                            "references": [
-                                {"id": addr},
-                            ],
-                        }
-                    },
-                    "options": {
-                        "paths": [
-                            {
-                                "from": f"input://file-{hashsum}/{addr}",
-                                "to": f"tree://{dest}",
-                                "remove_destination": True,
-                            }
-                        ]
+                        "gpgkeys": args["gpgkeys"],
                     },
                 },
             }
