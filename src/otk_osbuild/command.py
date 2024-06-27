@@ -91,6 +91,14 @@ def depsolve_dnf4_defines():
         source_add_curl(data, package["checksum"], package["remote_location"])
 
     sys.stdout.write(
+        json.dumps({
+            "tree": {
+                "sources": [],
+            },
+        })
+
+    """
+    sys.stdout.write(
         json.dumps(
             {
                 # "context": data["context"],
@@ -116,6 +124,7 @@ def depsolve_dnf4_defines():
             }
         )
     )
+    """
 
 
 def noop():

@@ -25,5 +25,10 @@ otk.include.centos-9-x86_64: "common/centos-9.yaml"
 
 otk.target.osbuild.qcow2:
   pipelines:
-    #- otk.include: "pipeline/build.yaml"
+    - otk.include: "pipeline/build.yaml"
     - otk.include: "pipeline/os.yaml"
+  sources:
+    org.osbuild.rpm:
+      otk.op.join:
+        - ${packages.build.sources}
+        - ${packages.os.sources}
