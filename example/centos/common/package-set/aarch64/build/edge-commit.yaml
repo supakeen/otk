@@ -1,7 +1,0 @@
-include:
-  otk.op.join:
-    values:
-      - otk.include: "common.yaml"
-      - - rpm-ostree
-        - tar
-exclude: []

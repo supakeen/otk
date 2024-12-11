@@ -1,9 +1,0 @@
-include:
-  otk.op.join:
-    values:
-      - otk.include: "common.yaml"
-      - - dosfstools
-        - python3-pyyaml
-        - rpm
-        - xfsprogs
-exclude: []

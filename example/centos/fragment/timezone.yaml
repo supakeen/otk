@@ -1,3 +1,0 @@
-type: org.osbuild.timezone
-options:
-  zone: ${modifications.timezone}
